@@ -1,0 +1,34 @@
+CREATE TABLE Courses (courseid INT PRIMARY KEY AUTO_INCREMENT, coursename VARCHAR(100), coursedescription TEXT);
+
+CREATE TABLE Enrolments (enrolmentid INT PRIMARY KEY AUTO_INCREMENT, studentid INT, courseid INT, enrolmentdate 
+DATE, FOREIGN KEY (studentid)REFERENCES Students(StudentID), FOREIGN KEY (courseid) REFERENCES Courses(courseid));
+
+-- Corrected Courses Insert
+INSERT INTO Courses (coursename, coursedescription) VALUES('Data Science', 'Intro to data science');
+INSERT INTO Courses (coursename, coursedescription) VALUES('Web Development', 'Front-end and back-end basics');
+INSERT INTO Courses (coursename, coursedescription) VALUES('SQL Basics', 'Intro to databases');
+
+-- Enrolments (correct as is, assuming valid foreign keys)
+INSERT INTO Enrolments (studentid, courseid, enrolmentdate) VALUES(1, 1, '2024-06-01');
+INSERT INTO Enrolments (studentid, courseid, enrolmentdate) VALUES(1, 2, '2024-06-02');
+INSERT INTO Enrolments (studentid, courseid, enrolmentdate) VALUES(2, 1, '2024-06-03');
+INSERT INTO Enrolments (studentid, courseid, enrolmentdate) VALUES(3, 3, '2024-06-04');
+
+Select * from Courses;
+Select * from Enrolments;
+
+ /*task1: list all studentts and the courses they are enrolled in*/
+SELECT s.Name AS StudentName, c.CourseName FROM Students s INNER JOIN Enrolments e ON s.StudentID = e.StudentID INNER JOIN Courses c ON e.CourseID = c.CourseID;
+
+/*task2: find the number of students enrolled in each course(indluding zero)*/
+SELECT c.CourseID, c.CourseName, COUNT(e.StudentID) AS NumberOfStudents FROM Courses c LEFT JOIN Enrolments e ON c.CourseID = e.CourseID GROUP BY c.CourseID, c.CourseName;
+	
+/*task3: list students who have enrolled in more than one course*/
+SELECT s.Name, COUNT(e.CourseID) AS NumberOfCourses FROM Enrolments e JOIN Students s ON e.StudentID = s.StudentID GROUP BY s.StudentID, s.Name HAVING COUNT(e.CourseID) > 1;
+
+/*task4: find courses with no enrolled students*/
+SELECT c.CourseID, c.CourseName FROM Courses c LEFT JOIN Enrolments e ON c.CourseID = e.CourseID WHERE e.EnrolmentID IS NULL;
+
+
+
+
